@@ -24,6 +24,7 @@ from mgz.summary.teams import get_teams_data
 from mgz.summary.players import get_players_data
 from mgz.summary.diplomacy import get_diplomacy_data
 from mgz.summary.chat import get_lobby_chat, parse_chat, Chat
+from mgz.summary.objects import get_objects_data
 
 
 LOGGER = logging.getLogger(__name__)
@@ -210,6 +211,10 @@ class Summary: # pylint: disable=too-many-public-methods
             self.get_ratings(),
             self.get_encoding()
         )
+
+    def get_objects(self):
+        """Get objects."""
+        return get_objects_data(self._header)
 
     def get_ratings(self):
         """Get player ratings."""
