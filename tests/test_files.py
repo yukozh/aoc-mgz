@@ -3,7 +3,7 @@ import unittest
 from mgz import header, body, fast
 
 
-def parse_file_full(path):
+def parse_file_full_body(path):
     with open(path, 'rb') as f:
         f.seek(0, 2)
         eof = f.tell()
@@ -14,7 +14,7 @@ def parse_file_full(path):
             body.operation.parse_stream(f)
 
 
-def parse_file_fast(path):
+def parse_file_fast_body(path):
     with open(path, 'rb') as f:
         f.seek(0, 2)
         eof = f.tell()
@@ -27,10 +27,10 @@ def parse_file_fast(path):
 
 class TestFiles(unittest.TestCase):
 
-    def test_files_full(self):
-        parse_file_full('tests/recs/small.mgz')
-        parse_file_full('tests/recs/de-13.07.aoe2record')
+    def test_files_full_body(self):
+        parse_file_full_body('tests/recs/small.mgz')
+        parse_file_full_body('tests/recs/de-13.07.aoe2record')
 
-    def test_files_fast(self):
+    def test_files_fast_body(self):
         for path in glob.glob('tests/recs/*'):
-            parse_file_fast(path)
+            parse_file_fast_body(path)
