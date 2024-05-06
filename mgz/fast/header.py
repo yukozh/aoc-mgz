@@ -202,6 +202,8 @@ def parse_map(data, version, save):
     tile_format = '<xbbx'
     if version is Version.DE:
         tile_format = '<bxb6x'
+        if save >= 62.0:
+            tile_format = '<b2xb6x'
 
     size_x, size_y, zone_num = unpack('<III', data)
     tile_num = size_x * size_y
