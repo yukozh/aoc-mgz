@@ -204,7 +204,6 @@ def parse_match(handle):
     for team in team_ids:
         t = [players[x] for x in team]
         for x in team:
-            players[x].team = t
             players[x].team_id = team
         teams.append(t)
 

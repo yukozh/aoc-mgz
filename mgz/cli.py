@@ -6,6 +6,7 @@ import logging
 import os
 import struct
 import sys
+import json
 from datetime import datetime
 from collections import defaultdict
 
@@ -16,14 +17,17 @@ import mgz
 import mgz.const
 import mgz.header
 import mgz.util
+from mgz.model import parse_match
 from mgz import fast
 from mgz.summary import Summary
 from mgz.util import find_postgame, LOOKAHEAD
+from mgz.model import parse_match, serialize
 
 
 LOGGER = logging.getLogger(__name__)
 CMD_INFO = 'info'
 CMD_CHAT = 'chat'
+CMD_JSON = 'json'
 CMD_VALIDATE = 'validate'
 CMD_DUMP = 'dump'
 CMD_MERGE = 'merge'
@@ -69,6 +73,12 @@ def is_valid(path):
         except ConstructError:
             print('invalid')
             return False
+
+def export_json(path):
+    """Export to json."""
+    with open(path, 'rb') as h:
+        match = parse_match(h)
+        print(json.dumps(serialize(match), indent=2))
 
 
 def dump_rec(path):
@@ -181,6 +191,9 @@ async def run(args): # pylint: disable=too-many-branches
     elif args.cmd == CMD_CHAT:
         for rec in args.rec_path:
             print_chat(rec)
+    elif args.cmd == CMD_JSON:
+        for rec in args.rec_path:
+            export_json(rec)
     elif args.cmd == CMD_VALIDATE:
         for rec in args.rec_path:
             if not is_valid(rec):
@@ -207,6 +220,8 @@ def get_args():
     info.add_argument('rec_path', nargs='+')
     chat = subparsers.add_parser(CMD_CHAT)
     chat.add_argument('rec_path', nargs='+')
+    json = subparsers.add_parser(CMD_JSON)
+    json.add_argument('rec_path', nargs='+')
     validate = subparsers.add_parser(CMD_VALIDATE)
     validate.add_argument('rec_path', nargs='+')
     dump = subparsers.add_parser(CMD_DUMP)

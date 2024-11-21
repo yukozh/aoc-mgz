@@ -96,7 +96,7 @@ def extract_from_instructions(instructions):
                 language = pair[2]
                 break
     if encoding == 'unknown':
-        raise ValueError('could not detect encoding')
+        encoding = 'utf8'
     return encoding, language, name
 
 
