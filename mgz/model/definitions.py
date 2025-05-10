@@ -192,3 +192,4 @@ class Match:
     hash: str
     actions: list
     inputs: list
+    operations: list

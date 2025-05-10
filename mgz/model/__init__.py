@@ -231,6 +231,7 @@ def parse_match(handle):
     timestamp = 0
     resigned = []
     actions = []
+    operations = []
     viewlocks = []
     eapm = collections.Counter()
     last_viewlock = None
@@ -239,6 +240,7 @@ def parse_match(handle):
             op_type, op_data = fast.operation(handle)
             if op_type is fast.Operation.SYNC:
                 timestamp += op_data[0]
+                operations.append(op_data)
             elif op_type is fast.Operation.VIEWLOCK:
                 if op_data == last_viewlock:
                     continue
@@ -362,7 +364,8 @@ def parse_match(handle):
         data['de']['visibility_id'] == 2 if data['version'] is Version.DE else None,
         get_hash(data),
         actions,
-        inputs.inputs
+        inputs.inputs,
+        operations
     )
 
 
