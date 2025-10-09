@@ -66,7 +66,7 @@ def sync(data):
                 'dp_obj_ttl': values[ptr + 4],
                 'obj_count': values[ptr + 6],
             }
-    return increment, checksum, payload
+    return increment, payload
 
 
 def viewlock(data):
