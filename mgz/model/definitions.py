@@ -215,3 +215,4 @@ class Match:
     actions: list
     inputs: list
     uptimes: list
+    operations: list

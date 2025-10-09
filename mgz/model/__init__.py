@@ -205,7 +205,6 @@ def parse_match(handle):
     for team in team_ids:
         t = [players[x] for x in team]
         for x in team:
-            players[x].team = t
             players[x].team_id = team
         teams.append(t)
 
@@ -233,6 +232,7 @@ def parse_match(handle):
     timestamp = 0
     resigned = []
     actions = []
+    operations = []
     viewlocks = []
     uptimes = []
     eapm = collections.Counter()
@@ -253,6 +253,7 @@ def parse_match(handle):
                             total_resources=stats['total_res'],
                             total_objects=stats['obj_count']
                         ))
+                operations.append(op_data)
             elif op_type is fast.Operation.VIEWLOCK:
                 if op_data == last_viewlock:
                     continue
@@ -385,7 +386,8 @@ def parse_match(handle):
         get_hash(data),
         actions,
         inputs.inputs,
-        uptimes
+        uptimes,
+        operations
     )
 
 

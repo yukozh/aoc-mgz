@@ -5,7 +5,7 @@ import struct
 from mgz.fast.enums import Operation, Action, Postgame, Age
 from mgz.fast.actions import parse_action_71094
 from mgz.util import check_flags, unpack
-
+from mgz.util import check_flags
 
 MAX_PLAYERS = 8
 SYNC_LEN_PER_PLAYER = 11
@@ -351,7 +351,7 @@ def operation(data):
         try:
             op_type = Operation(op_id)
         except ValueError:
-            return Operation.SAVE, save(data)
+            return Operation.SAVE, {}
         if op_type == Operation.ACTION:
             return op_type, action(data)
         if op_type == Operation.SYNC:

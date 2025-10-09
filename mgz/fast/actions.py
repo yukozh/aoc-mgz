@@ -46,7 +46,7 @@ def parse_action_71094(action_type, player_id, raw):
     if action_type is Action.BUILD:
         selected, x, y, building_id, unk2, unk3, unk4 = unpack('<h2xffI8xhbb', data)
         object_ids = list(unpack(f'{selected}I', data, shorten=False))
-        payload = dict(building_id=building_id, object_ids=object_ids, x=x, y=y)
+        payload = dict(building_id=building_id, object_ids=object_ids, x=x, y=y, unk2=unk2, unk3=unk3, unk4=unk4)
     if action_type is Action.GATHER_POINT:
         selected, x, y, target_id, target_type = unpack('<h2xffii', data)
         object_ids = list(unpack(f'{selected}I', data, shorten=False))
@@ -59,9 +59,9 @@ def parse_action_71094(action_type, player_id, raw):
         object_ids = list(unpack(f'{selected}I', data, shorten=False))
         payload = dict(stance_id=stance_id, object_ids=object_ids)
     if action_type is Action.SPECIAL:
-        selected, target_id, x, y, slot_id, order_id = unpack('<Iiff4xh2xh2x', data)
+        selected, target_id, x, y, slot_id, order_id, unknown = unpack('<Iiff4xh2xh2xb', data)
         object_ids = list(unpack(f'{selected}I', data, shorten=False))
-        payload = dict(order_id=order_id, slot_id=slot_id, target_id=target_id, x=x, y=y, object_ids=object_ids)
+        payload = dict(order_id=order_id, slot_id=slot_id, target_id=target_id, x=x, y=y, unknown=unknown, object_ids=object_ids)
     if action_type is Action.FORMATION:
         selected, formation_id = unpack('<II', data)
         object_ids = list(unpack(f'{selected}I', data, shorten=False))
@@ -123,7 +123,7 @@ def parse_action_71094(action_type, player_id, raw):
         wood, food, gold, stone = unpack('<ffff', data)
         data.read(16) # cost[4]
         data.read(8) # attribute id[4]
-        target_id = data.read(1)
+        target_id = unpack('<b', data)
         payload = dict(target_player_id=target_id, food=food, wood=wood, stone=stone, gold=gold)
     if action_type in [Action.GATE, Action.DROP_RELIC]:
         object_id = unpack('<I', data)

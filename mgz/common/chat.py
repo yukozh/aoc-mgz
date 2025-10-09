@@ -64,32 +64,6 @@ IMPERIAL_AGE_MARKERS = [
     'Имперская эпоха',
 ]
 AGE_MARKERS = [
-    'advanced to the',
-    'a progressé vers',
-    '升级至',
-    'avanzó a la',
-    'đã phát triển lên',
-    '시대로 발전했습니다',
-    'vorangeschritten',
-    'переход в',
-    'avançou para a Idade',
-    'wkroczyło w Erę',
-    '升級至',
-    'passaggio',
-    'geÃ§ti',
-    '進化し',
-    'avançou para',
-    'новую эпоху',
-    'avanzó a Edad',
-    'avanzado a la Edad',
-    'ha raggiunto',
-    'avanzó a Ed',
-    'đã nâng cấp',
-    'progressé vers',
-    'wkracza do',
-    'युग में उन्नत है।',   # hi
-    'telah mara ke', # ms
-    'geçti',         # tr
 ]
 SAVE_MARKERS = [
     'Continuar con la partida en vez de guardar y salir',
