@@ -73,8 +73,10 @@ class Action(Enum):
     DE_QUEUE = 129
     DE_UNKNOWN_130 = 130
     DE_UNKNOWN_131 = 131
+    DE_UNKNOWN_134 = 134
     DE_UNKNOWN_135 = 135
     DE_UNKNOWN_136 = 136
+    DE_UNKNOWN_137 = 137
     DE_UNKNOWN_138 = 138
     DE_107_B = 140
     DE_TRIBUTE = 196
@@ -85,3 +87,10 @@ class Postgame(Enum):
     """Postgame types."""
     WORLD_TIME = 1
     LEADERBOARDS = 2
+
+class Age(Enum):
+    """Age types."""
+    DARK_AGE = 1
+    FEUDAL_AGE = 2
+    CASTLE_AGE = 3
+    IMPERIAL_AGE = 4
