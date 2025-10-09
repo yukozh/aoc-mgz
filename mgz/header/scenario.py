@@ -154,7 +154,7 @@ game_settings = "game_settings"/Struct(
             If(lambda ctx: 64.3 > find_save_version(ctx) >= 63, Find(struct.pack('<d', 3.9), None)),
             If(lambda ctx: find_save_version(ctx) >= 64.3, Find(struct.pack('<d', 4.1), None)),
         ),
-        "end_of_game_settings"/Find(b'\x9a\x99\x99\x99\x99\x99\xf9\\x3f', None)
+        "end_of_game_settings"/Find(b'\x9a\x99\x99\x99\x99\x99\xf9\\x3f', None),
     )
 )
 

@@ -21,7 +21,7 @@ active_sprite = "active_sprite"/Struct(
 )
 
 animated_sprite = "animated_sprite"/Struct(
-    "animate_interval"/Int32ul,
+    "animate_interval"/Float32l,
     "animate_last"/Int32ul,
     "last_frame"/Int16ul,
     "frame_changed"/Byte,
@@ -194,7 +194,7 @@ base_moving = "base_moving"/Struct(
     "user_defined_waypoints"/Array(lambda ctx: ctx.num_user_defined_waypoints, vector),
     "has_substitute_position"/Int32ul,
     "substitute_position"/vector,
-    "consecutive_subsitute_count"/Int32ul
+    "consecutive_substitute_count"/Int32ul
 )
 
 moving = "moving"/Struct(
@@ -202,7 +202,8 @@ moving = "moving"/Struct(
     "hd_moving"/If(lambda ctx: find_version(ctx) == Version.HD, Bytes(1)),
     "de_moving"/If(lambda ctx: find_version(ctx) == Version.DE, Bytes(17)),
     "ver2616"/If(lambda ctx: 37 > find_save_version(ctx) >= 26.16, Bytes(8)),
-    "ver37"/If(lambda ctx: find_save_version(ctx) >= 37, Bytes(5)),
+    "ver37"/If(lambda ctx: 63 > find_save_version(ctx) >= 37, Bytes(5)),
+    "ver63"/If(lambda ctx: find_save_version(ctx) >= 63, Bytes(4)),
 )
 
 move_to = "move_to"/Struct(
@@ -390,7 +391,8 @@ unit_ai = "ai"/Struct(
     "best_unit_to_attack"/Int32sl,
     "formation_type"/Byte,
     "de_unk"/If(lambda ctx: find_version(ctx) == Version.DE, Bytes(4)),
-    "de_unk_byte"/If(lambda ctx: find_save_version(ctx) >= 25.22, Byte)
+    "de_unk_byte"/If(lambda ctx: find_save_version(ctx) >= 25.22, Byte),
+    "de_unknown_2"/If(lambda ctx: find_save_version(ctx) >= 63.0 and ctx._.has_ai in (15, 17), Bytes(4))
 )
 
 
