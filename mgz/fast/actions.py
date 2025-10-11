@@ -27,8 +27,9 @@ def parse_action_71094(action_type, player_id, raw):
             payload['number'] = unpack('<4xh', data)
     if action_type is Action.DE_QUEUE:
         selected, building_type, unit_id, amount, *object_ids = unpack('<h4xhhh', data)
+        unknown = unpack(f'<1I', data, shorten=False)
         object_ids = list(unpack(f'<{selected}I', data, shorten=False))
-        payload = dict(object_ids=object_ids, amount=amount, unit_id=unit_id)
+        payload = dict(object_ids=object_ids, amount=amount, unit_id=unit_id, selected=selected)
     if action_type is Action.MOVE:
         x, y, selected = unpack('<4x2fh', data)
         object_ids = []
