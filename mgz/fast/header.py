@@ -251,6 +251,8 @@ def parse_scenario(data, num_players, version, save):
     next_uid, scenario_version = unpack('<II', data)
     if save >= 61.5:
         data.read(72)
+    if save >= 66.6:
+        data.read(18)
     data.read(4447)
     scenario_filename = None
     if version is Version.DE:
