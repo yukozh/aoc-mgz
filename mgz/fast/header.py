@@ -249,6 +249,8 @@ def parse_map(data, version, save):
 def parse_scenario(data, num_players, version, save):
     """Parse scenario section."""
     next_uid, scenario_version = unpack('<II', data)
+    if save >= 66.6:
+        data.read(18)
     if save >= 61.5:
         data.read(72)
     data.read(4447)
