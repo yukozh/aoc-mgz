@@ -263,8 +263,8 @@ def parse_scenario(data, num_players, version, save):
     for _ in range(0, 9):
         aoc_string(data)
     data.read(78)
-    for _ in range(0, 16):
-        aoc_string(data)
+    #for _ in range(0, 16):
+    #    aoc_string(data)
     data.read(196)
     for _ in range(0, 16):
         data.read(24)
