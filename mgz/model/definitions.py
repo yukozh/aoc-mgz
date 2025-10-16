@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 from datetime import timedelta, datetime
 from mgz.fast import Action as ActionEnum
+from mgz.fast import Age as AgeEnum
 from mgz.util import Version
 
 
@@ -30,6 +31,15 @@ class Object:
 
 
 @dataclass
+class TimeseriesRow:
+    """Represents a timeseries row."""
+
+    timestamp: timedelta
+    total_resources: int
+    total_objects: int
+
+
+@dataclass
 class Player:
     """Represents a player."""
 
@@ -42,6 +52,7 @@ class Player:
     position: Position
     objects: list
     profile_id: int
+    timeseries: list[TimeseriesRow]
     prefer_random: bool = None
     team: list = None
     team_id: int = None
@@ -141,6 +152,17 @@ class Chat:
     def __repr__(self):
         return f'[{self.timestamp}] {self.player}: {self.message}'
 
+@dataclass
+class Uptime:
+    """Represents an advanced to age event."""
+
+    timestamp: timedelta
+    age: AgeEnum
+    player: Player
+
+    def __repr__(self):
+        return f'[{self.timestamp}] {self.player} -> {self.age}'
+
 
 @dataclass
 class Match:
@@ -192,3 +214,4 @@ class Match:
     hash: str
     actions: list
     inputs: list
+    uptimes: list

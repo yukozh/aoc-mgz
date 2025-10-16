@@ -186,7 +186,8 @@ def parse_match(handle):
                 for obj in player['objects']
             ],
             player.get('profile_id'),
-            player.get('prefer_random')
+            [],
+            player.get('prefer_random'),
         )
 
     # Assign teams
@@ -233,6 +234,7 @@ def parse_match(handle):
     resigned = []
     actions = []
     viewlocks = []
+    uptimes = []
     eapm = collections.Counter()
     last_viewlock = None
     while True:
@@ -240,6 +242,17 @@ def parse_match(handle):
             op_type, op_data = fast.operation(handle)
             if op_type is fast.Operation.SYNC:
                 timestamp += op_data[0]
+                if op_data[2]:
+                    stat_row = op_data[2]
+                    for player in players.values():
+                        if player.number not in stat_row:
+                            continue
+                        stats = stat_row[player.number]
+                        player.timeseries.append(TimeseriesRow(
+                            timestamp=timedelta(milliseconds=stat_row['current_time']),
+                            total_resources=stats['total_res'],
+                            total_objects=stats['obj_count']
+                        ))
             elif op_type is fast.Operation.VIEWLOCK:
                 if op_data == last_viewlock:
                     continue
@@ -257,6 +270,14 @@ def parse_match(handle):
                         players[chat['player_number']]
                     ))
                     inputs.add_chat(chats[-1])
+                if chat['type'] == ChatEnum.AGE:
+                    uptimes.append(
+                        Uptime(
+                            timedelta(milliseconds=chat['timestamp'] + data['map']['restore_time']),
+                            chat['age'],
+                            players.get(chat['player_number']),
+                        )
+                    )
             elif op_type is fast.Operation.ACTION:
                 action_type, action_data = op_data
                 action = Action(timedelta(milliseconds=timestamp), action_type, action_data)
@@ -363,7 +384,8 @@ def parse_match(handle):
         data['de']['visibility_id'] == 2 if data['version'] is Version.DE else None,
         get_hash(data),
         actions,
-        inputs.inputs
+        inputs.inputs,
+        uptimes
     )
 
 

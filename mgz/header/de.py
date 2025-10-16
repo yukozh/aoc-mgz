@@ -3,7 +3,7 @@
 from construct import (
     Struct, Int32ul, Float32l, Array, Padding, Flag, If,
     Byte, Int16ul, Bytes, Int32sl, Peek, Const, RepeatUntil,
-    Int64ul, Computed
+    Int64ul, Computed, IfThenElse
 )
 
 from mgz.enums import VictoryEnum, ResourceLevelEnum, AgeEnum, PlayerTypeEnum, DifficultyEnum
@@ -28,13 +28,15 @@ player = Struct(
     "dat_crc"/Bytes(8),
     "mp_game_version"/Byte,
     "civ_id"/Int32ul,
-    "unk"/If(lambda ctx: find_save_version(ctx) >= 61.5, Int32ul),
+    "custom_civ_count"/IfThenElse(lambda ctx: find_save_version(ctx) >= 61.5, Int32ul, Computed(lambda _: 0)),
+    "custom_civ_ids"/Array(lambda ctx: ctx.custom_civ_count, Int32ul),
     "ai_type"/de_string,
     "ai_civ_name_index"/Byte,
     "ai_name"/de_string,
+    "censored_name"/If(lambda ctx: find_save_version(ctx) >= 66.3,de_string),
     "name"/de_string,
     "type"/PlayerTypeEnum(Int32ul),
-    "profile_id"/Int32ul,
+    "profile_id"/Int32sl, # -1 if it's an empty slot
     "ai_unknown" / Int32sl, # Often 0, sometimes -1 for AI players
     "player_number"/Int32sl,
     "hd_rm_elo"/If(lambda ctx: find_save_version(ctx) < 25.22, Int32ul),
@@ -42,6 +44,7 @@ player = Struct(
     "prefer_random"/Flag,
     "custom_ai"/Flag,
     If(lambda ctx: find_save_version(ctx) >= 25.06, "handicap"/Bytes(8)),
+    If(lambda ctx: find_save_version(ctx) >= 64.3, "unknown_de_64_3" / Int32ul),
 )
 
 string_block = Struct(
@@ -104,12 +107,12 @@ de = "de"/Struct(
     "handicap"/If(lambda ctx: find_save_version(ctx) >= 25.06, Flag),
     "unk"/If(lambda ctx: find_save_version(ctx) >= 50, Flag),
     separator,
-    "players"/Array(lambda ctx: ctx.num_players if find_save_version(ctx) >= 37 else 8, player),
+    "players"/Array(lambda ctx: ctx.num_players if find_save_version(ctx) >= 37 and find_save_version(ctx) < 66.3 else 8, player),
     Bytes(9),
     "fog_of_war"/Flag,
     "cheat_notifications"/Flag,
     "colored_chat"/Flag,
-    "empty_slots"/If(lambda ctx: find_save_version(ctx) >= 37, Array(lambda ctx: 8 - ctx.num_players, Struct(
+    "empty_slots"/If(lambda ctx: find_save_version(ctx) >= 37 and find_save_version(ctx) < 66.3, Array(lambda ctx: 8 - ctx.num_players, Struct(
         "unk"/If(lambda ctx: find_save_version(ctx) >= 61.5, Int32ul),
         "i0x"/Int32ul,
         "i0a"/Int32ul,
@@ -122,6 +125,7 @@ de = "de"/Struct(
         "i1"/Int32ul,
         "i2"/Int32ul,
         "a4"/Bytes(8),
+        If(lambda ctx: find_save_version(ctx) >= 64.3, "unknown_de_64_3" / Int32ul),
     ))),
     separator,
     "ranked"/Flag,
@@ -158,6 +162,10 @@ de = "de"/Struct(
     If(lambda ctx: find_save_version(ctx) >= 37, Bytes(3)),
     If(lambda ctx: find_save_version(ctx) >= 50, Bytes(8)),
     If(lambda ctx: find_save_version(ctx) >= 61.5, Flag),
+    If(lambda ctx: find_save_version(ctx) >= 63, Bytes(5)),
+    "unknown_count"/If(lambda ctx: find_save_version(ctx) >= 66.3, Int32ul),
+    If(lambda ctx: find_save_version(ctx) >= 66.3, Bytes(12)),
+    If(lambda ctx: find_save_version(ctx) >= 66.3, Array(lambda ctx: ctx.unknown_count, Bytes(4))),
     de_string,
     Bytes(5),
     If(lambda ctx: find_save_version(ctx) >= 13.13, Byte),
